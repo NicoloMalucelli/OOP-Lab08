@@ -5,10 +5,15 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -38,7 +43,15 @@ public class BadIOGUI {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
+        final JButton read = new JButton("Read");
+        //canvas.add(write, BorderLayout.CENTER);
+
+        final JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+        buttonPanel.add(write);
+        buttonPanel.add(read);
+
+        canvas.add(buttonPanel, BorderLayout.CENTER);
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -57,6 +70,22 @@ public class BadIOGUI {
                 try (PrintStream ps = new PrintStream(PATH)) {
                     ps.print(rng.nextInt());
                 } catch (FileNotFoundException e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        read.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                try (DataInputStream stream =  new DataInputStream(new FileInputStream(PATH))) {
+                    //ps.print(rng.nextInt());
+                    System.out.println(Integer.toString(stream.readInt()));
+                } catch (FileNotFoundException e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                } catch (IOException e1) {
                     JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
                 }
@@ -86,6 +115,7 @@ public class BadIOGUI {
         /*
          * OK, ready to pull the frame onscreen
          */
+        frame.pack();
         frame.setVisible(true);
     }
 
