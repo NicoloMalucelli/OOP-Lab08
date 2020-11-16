@@ -10,9 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 
 /**
  * This class is a simple application that writes a random number on a file.
@@ -32,21 +35,34 @@ public class MiniGUI {
      * 
      */
     public MiniGUI() {
+        final JTextField result =  new JTextField();
+        final JButton write = new JButton("Print a random number on standard output");
+        write.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                System.out.println(Integer.toString(rng.nextInt()));
+                result.setText(Integer.toString(rng.nextInt()));
+            }
+        });
+
+        final JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(write, BorderLayout.CENTER);
+
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
-        final JButton write = new JButton("Print a random number on standard output");
-        canvas.add(write, BorderLayout.CENTER);
+        canvas.add(result, BorderLayout.NORTH);
+        //canvas.add(write, BorderLayout.CENTER);
+
+        canvas.add(buttonPanel, BorderLayout.CENTER);
+
         frame.setContentPane(canvas);
+        //frame.setContentPane(resultPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
          * Handlers
          */
-        write.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                System.out.println(rng.nextInt());
-            }
-        });
+
     }
 
     private void display() {
@@ -71,6 +87,7 @@ public class MiniGUI {
         /*
          * OK, ready to pull the frame onscreen
          */
+        frame.pack();
         frame.setVisible(true);
     }
 
