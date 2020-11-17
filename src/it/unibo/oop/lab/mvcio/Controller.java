@@ -1,9 +1,51 @@
 package it.unibo.oop.lab.mvcio;
 
-/**
- * 
- */
-public class Controller {
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Serializable;
+
+public class Controller implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private File src = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "output.txt");
+
+    /**
+     * @param newFile
+     *              new file to set as file
+     */
+    public void setFile(final File newFile) {
+        if (newFile.exists()) {
+            this.src = newFile;
+        } else {
+            throw new IllegalArgumentException("file you are trying to use doesn't exist");
+        }
+    }
+
+    /**
+     * @return a copy of the source
+     */
+    public File getFile() {
+        return new File(this.getPath());
+    }
+
+    /**
+     * @return the path of the source
+     */
+    public String getPath() {
+        return src.getPath();
+    }
+
+    /**
+     * @param text
+     *          the string to write on source
+     */
+    public void write(final String text) throws IOException {
+        try (PrintStream ps = new PrintStream(src)) {
+            ps.println(text);
+        }
+    }
 
     /*
      * This class must implement a simple controller responsible of I/O access. It
